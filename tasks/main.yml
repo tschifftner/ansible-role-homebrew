@@ -1,9 +1,14 @@
 ---
 # Homebrew setup prerequisites.
+- name: Get current account's username.
+  shell: whoami
+  register: homebrew_whoami
+  changed_when: false
+  always_run: true
+
 - name: Ensure Homebrew parent directory has correct permissions.
   file:
     path: "{{ homebrew_prefix }}"
-    owner: root
     group: admin
     state: directory
     mode: 0775
@@ -16,6 +21,10 @@
     group: admin
     state: directory
     mode: 0775
+  become: yes
+
+- name: Agree to Apple Xcode license agreements.
+  command: xcodebuild -license accept
   become: yes
 
 # Clone Homebrew.
@@ -57,6 +66,8 @@
     src: "{{ homebrew_install_path }}/bin/brew"
     dest: "{{ homebrew_brew_bin_path }}/brew"
     state: link
+    owner: "{{ homebrew_whoami.stdout }}"
+    group: admin
   when: homebrew_binary.stat.exists == false
   become: yes
 
