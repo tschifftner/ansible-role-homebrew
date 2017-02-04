@@ -12,7 +12,7 @@
 - name: Ensure Homebrew directory exists.
   file:
     path: "{{ homebrew_install_path }}"
-    owner: "{{ ansible_user_id }}"
+    owner: "{{ homebrew_whoami.stdout }}"
     group: admin
     state: directory
     mode: 0775
@@ -33,7 +33,7 @@
   file:
     path: "{{ homebrew_brew_bin_path }}"
     state: directory
-    owner: "{{ ansible_user_id }}"
+    owner: "{{ homebrew_whoami.stdout }}"
     group: admin
     mode: 0775
   become: yes
@@ -42,7 +42,7 @@
   file:
     path: "{{ homebrew_install_path }}"
     state: directory
-    owner: "{{ ansible_user_id }}"
+    owner: "{{ homebrew_whoami.stdout }}"
     group: admin
     recurse: true
   become: yes
